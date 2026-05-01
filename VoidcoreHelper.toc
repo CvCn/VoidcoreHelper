@@ -3,7 +3,7 @@
 ## Author: York
 ## Notes: 晦暗虚空核心助手
 ## SavedVariables: VOIDCOREHELPER_DB
-## Version: 1.0
+## Version: 1.1
 ## IconTexture: 7658128
 ## X-Curse-Project-ID: 1530072
 
