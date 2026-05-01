@@ -1,0 +1,8 @@
+package-as: VoidcoreHelper
+
+enable-nolib-creation: no
+
+ignore:
+  - pkgmeta.yaml
+  - .gitignore
+  - .github
