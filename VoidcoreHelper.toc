@@ -5,6 +5,7 @@
 ## SavedVariables: VOIDCOREHELPER_DB
 ## Version: 1.0
 ## IconTexture: 7658128
+## X-Curse-Project-ID: 1530072
 
 libs\Init.xml
 Init.lua
