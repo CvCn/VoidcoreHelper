@@ -131,7 +131,7 @@ end
 
 local eventFrame = CreateFrame("frame", nil, UIParent)
 eventFrame:Hide()
-eventFrame:RegisterEvent("SPELL_CONFIRMATION_PROMPT")
+-- eventFrame:RegisterEvent("SPELL_CONFIRMATION_PROMPT")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 local lastTime = GetTime()
