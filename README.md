@@ -6,8 +6,6 @@
 # Supported WOW Versions：
 - Mid Night 12.0.5
 
-*If you find that certain functions are not working, it means they haven't been completed yet*
-
 # Locales：
 - All
 

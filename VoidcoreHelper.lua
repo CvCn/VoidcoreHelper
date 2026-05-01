@@ -43,7 +43,7 @@ VCH.MR_upper = {
 
 VCH.UG_displayItemIDs = {
     268969, -- 地下堡
-    268970 -- 狩猎
+    269768 -- 狩猎
 }
 
 local itemLevelString = "^" .. gsub(ITEM_LEVEL, "%%d", "(%%d+)")
@@ -132,8 +132,8 @@ end
 local eventFrame = CreateFrame("frame", nil, UIParent)
 eventFrame:Hide()
 -- eventFrame:RegisterEvent("SPELL_CONFIRMATION_PROMPT")
-eventFrame:RegisterEvent("PLAYER_LOGIN")
-eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+-- eventFrame:RegisterEvent("PLAYER_LOGIN")
+-- eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 local lastTime = GetTime()
 eventFrame:SetScript("OnUpdate", function ()
     local now = GetTime()
