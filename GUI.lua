@@ -434,7 +434,9 @@ local function InitPoint(displayItemID, itemContext, isRaid)
     local uiScale = UIParent:GetEffectiveScale()
     pFrame:SetSize(25 / uiScale, 25 / uiScale)
     pFrame:SetPoint("TOPLEFT", EncounterJournal, "TOPRIGHT", 20, -20)
-    pFrame:Show()
+    if EncounterJournal:IsShown() then
+        pFrame:Show()
+    end
 
     pFrame.chickBtn1 = pFrame.chickBtn1 or CreateFrame("CheckButton", "", pFrame, "UICheckButtonTemplate")
     pFrame.chickBtn2 = pFrame.chickBtn2 or CreateFrame("CheckButton", "", pFrame, "UICheckButtonTemplate")
@@ -501,34 +503,40 @@ local Difficulty = {
 }
 
 pFrame:RegisterEvent("PLAYER_LOOT_SPEC_UPDATED")
-pFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+pFrame:RegisterEvent("ADDON_LOADED")
 pFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOOT_SPEC_UPDATED" then
         freshTip()
     end
-    if event == "PLAYER_ENTERING_WORLD" then
-        if not VCH.loadFinish then
-            VCH:LoadFrame()
-        end
-        if not VCH.loadRaidFinish then
-            VCH:LoadRaidFrame()
+    if event == "ADDON_LOADED" then
+        local addOnName = ...
+        if addOnName == "Blizzard_EncounterJournal" then
+            if not VCH.loadFinish then
+                VCH:LoadFrame()
+            end
+            if not VCH.loadRaidFinish then
+                VCH:LoadRaidFrame()
+            end
         end
     end
 end)
 
-
-hooksecurefunc("EncounterJournal_LoadUI", function()
-    VCH:LoadFrame()
-    VCH:LoadRaidFrame()
-end)
+-- hooksecurefunc("EncounterJournal_LoadUI", function()
+--     if not VCH.loadFinish then
+--         VCH:LoadFrame()
+--     end
+--     if not VCH.loadRaidFinish then
+--         VCH:LoadRaidFrame()
+--     end
+-- end)
 
 local gFrame = CreateFrame("Frame", "VCH_G_Frame", UIParent)
-gFrame:SetScript("OnEnter", function (self)
+gFrame:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:SetItemByID(VCH.UG_displayItemIDs[2], nil, 55, 0)
     GameTooltip:Show()
 end)
-gFrame:SetScript("OnLeave", function ()
+gFrame:SetScript("OnLeave", function()
     GameTooltip:Hide()
 end)
 hooksecurefunc("Garrison_LoadUI", function()
@@ -554,17 +562,12 @@ function VCH:LoadFrame()
         EncounterJournalEncounterFrameInfo:HookScript("OnShow", function()
             C_Timer.After(0, function()
                 local displayItemID = VCH.MG_displayItemIDs[EncounterJournal.instanceID]
-                -- VCH:FreshDungeon(displayItemID, VCH.treasureContextLevel_2)
-                -- VoidcoreHelperMiniFrame.currSelectId = displayItemID .. "_" .. VCH.treasureContextLevel_2
-                -- VoidcoreHelperMiniFrame:Show()
-                -- VoidcoreHelperMiniFrame:SetPoint("TOPRIGHT", EncounterJournal, "TOPLEFT", -20, 0)
                 if displayItemID then
                     InitPoint(displayItemID, 16)
                 end
             end)
         end)
         EncounterJournalEncounterFrameInfo:HookScript("OnHide", function()
-            -- VoidcoreHelperMiniFrame:Hide()
             pFrame:Hide()
         end)
         VCH.loadFinish = true
