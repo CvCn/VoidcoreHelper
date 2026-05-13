@@ -691,6 +691,12 @@ function VCH:LoadLootList()
             if success then
                 local Lootcache = D:ReadDB("Lootcache", {})
 
+                for _, lootFrame in ipairs(lootFrames) do
+                    if lootFrame.VCH_ICON then
+                        lootFrame.VCH_ICON:Hide()
+                    end
+                end
+
                 local displayItemID = VCH.MG_displayItemIDs[EncounterJournal.instanceID] or
                     VCH.MR_displayItemIDs[EncounterJournal.encounterID]
                 if displayItemID then
@@ -698,9 +704,6 @@ function VCH:LoadLootList()
                     local lootData = Lootcache[displayItemID][specIcon] or {}
 
                     for _, lootFrame in ipairs(lootFrames) do
-                        if lootFrame.VCH_ICON then
-                            lootFrame.VCH_ICON:Hide()
-                        end
                         if lootFrame.itemID then
                             local itemName = C_Item.GetItemInfo(lootFrame.itemID)
                             for _, voidCoreLootName in ipairs(lootData) do
