@@ -356,68 +356,83 @@ function VCH:InItList(lootData)
     end
 end
 
-local VoidcoreHelperMiniFrame = CreateFrame("Frame", "VoidcoreHelperMiniFrame", UIParent)
-local lastTime2 = GetTime()
+-- local VoidcoreHelperMiniFrame = CreateFrame("Frame", "VoidcoreHelperMiniFrame", UIParent)
+-- local lastTime2 = GetTime()
 
-VoidcoreHelperMiniFrame:SetSize(200, 200)
-VoidcoreHelperMiniFrame.background = VoidcoreHelperMiniFrame.background or
-    VoidcoreHelperMiniFrame:CreateTexture(nil, "BACKGROUND", nil, 2)
-VoidcoreHelperMiniFrame.background:SetAllPoints(VoidcoreHelperMiniFrame) -- 设置背景纹理填满整个框
-VoidcoreHelperMiniFrame.background:SetColorTexture(0, 0, 0, 0.7)         -- 设置背景颜色为黑色（RGBA）
-VoidcoreHelperMiniFrame:Hide()
-VoidcoreHelperMiniFrame.points = {}
-VoidcoreHelperMiniFrame.contents = {}
-VoidcoreHelperMiniFrame:SetScript("OnUpdate", function(self)
-    local now = GetTime()
-    if now - lastTime2 > 0.2 and self:IsShown() then
-        lastTime2 = now
+-- VoidcoreHelperMiniFrame:SetSize(200, 200)
+-- VoidcoreHelperMiniFrame.background = VoidcoreHelperMiniFrame.background or
+--     VoidcoreHelperMiniFrame:CreateTexture(nil, "BACKGROUND", nil, 2)
+-- VoidcoreHelperMiniFrame.background:SetAllPoints(VoidcoreHelperMiniFrame) -- 设置背景纹理填满整个框
+-- VoidcoreHelperMiniFrame.background:SetColorTexture(0, 0, 0, 0.7)         -- 设置背景颜色为黑色（RGBA）
+-- VoidcoreHelperMiniFrame:Hide()
+-- VoidcoreHelperMiniFrame.points = {}
+-- VoidcoreHelperMiniFrame.contents = {}
+-- VoidcoreHelperMiniFrame:SetScript("OnUpdate", function(self)
+--     local now = GetTime()
+--     if now - lastTime2 > 0.2 and self:IsShown() then
+--         lastTime2 = now
 
-        for _, p in ipairs(self.points) do
-            p.isUsed = false
-            p:Hide()
-        end
-        for _, c in ipairs(self.contents) do
-            c.isUsed = false
-            c:Hide()
-        end
+--         for _, p in ipairs(self.points) do
+--             p.isUsed = false
+--             p:Hide()
+--         end
+--         for _, c in ipairs(self.contents) do
+--             c.isUsed = false
+--             c:Hide()
+--         end
 
-        local lootData = D:ReadDB("lootData", {})
+--         local lootData = D:ReadDB("lootData", {})
 
-        local data = lootData[self.currSelectId]
-        if not data then return end
-        local max_h = 0
-        local max_w = 0
-        for item_idx, item in ipairs(data.item or {}) do
-            local p = getPoint(self)
-            local cur_tip = getContent(self)
-            p:SetText(item)
-            p:Show()
+--         local data = lootData[self.currSelectId]
+--         if not data then return end
+--         local max_h = 0
+--         local max_w = 0
+--         for item_idx, item in ipairs(data.item or {}) do
+--             local p = getPoint(self)
+--             local cur_tip = getContent(self)
+--             p:SetText(item)
+--             p:Show()
 
-            cur_tip.itemName = item
-            cur_tip.itemLevel = format(ITEM_LEVEL, data.itemLevel)
-            cur_tip.upper = data.upper
-            local font, size, flags = p:GetFont()
-            local p_h = 0
-            p_h = size * item_idx * 1.2
+--             cur_tip.itemName = item
+--             cur_tip.itemLevel = format(ITEM_LEVEL, data.itemLevel)
+--             cur_tip.upper = data.upper
+--             local font, size, flags = p:GetFont()
+--             local p_h = 0
+--             p_h = size * item_idx * 1.2
 
-            p:SetPoint("TOPRIGHT", self, "TOPRIGHT", -10, -p_h)
-            local m_h = size * (item_idx + 2) * 1.2
-            if m_h > max_h then max_h = m_h end
+--             p:SetPoint("TOPRIGHT", self, "TOPRIGHT", -10, -p_h)
+--             local m_h = size * (item_idx + 2) * 1.2
+--             if m_h > max_h then max_h = m_h end
 
-            local w = string.utf8len(data.orgItem[item_idx]) * size + 10
-            if w > max_w then max_w = w end
+--             local w = string.utf8len(data.orgItem[item_idx]) * size + 10
+--             if w > max_w then max_w = w end
 
-            cur_tip:SetAllPoints(p)
-            cur_tip:Show()
-        end
-        self:SetSize(max_w, max_h)
-    end
-end)
+--             cur_tip:SetAllPoints(p)
+--             cur_tip:Show()
+--         end
+--         self:SetSize(max_w, max_h)
+--     end
+-- end)
 
 local currDisplayItemID = nil
 local pFrame            = CreateFrame("Frame", "VCH_P_Frame", UIParent)
 
 VCH.add10               = true
+
+local specName, specIcon
+local function currSpec()
+    local specId = GetLootSpecialization()
+    if specId == 0 then
+        local specIdx = GetSpecialization()
+        local _, currentSpecName, _, icon = GetSpecializationInfo(specIdx)
+        specName = currentSpecName
+        specIcon = icon
+    else
+        local _, name, _, icon = GetSpecializationInfoByID(specId)
+        specName = name
+        specIcon = icon
+    end
+end
 
 local function freshTip()
     local fresh = VCH.MG_displayItemIDs[1315]
@@ -427,6 +442,7 @@ local function freshTip()
     GameTooltip:SetItemByID(fresh)
     GameTooltip:Hide()
 end
+
 local function InitPoint(displayItemID, itemContext, isRaid)
     pFrame.bg = pFrame.bg or pFrame:CreateTexture(nil, "BACKGROUND", nil, 2)
     pFrame.bg:SetAllPoints(pFrame)
@@ -461,6 +477,8 @@ local function InitPoint(displayItemID, itemContext, isRaid)
         pFrame.chickBtn1:SetChecked(false)
         pFrame.chickBtn2:SetChecked(true)
     end
+
+
 
     pFrame:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -504,9 +522,19 @@ local Difficulty = {
 
 pFrame:RegisterEvent("PLAYER_LOOT_SPEC_UPDATED")
 pFrame:RegisterEvent("ADDON_LOADED")
+pFrame:RegisterEvent("PLAYER_LOGIN")
+pFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
 pFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOOT_SPEC_UPDATED" then
         freshTip()
+        currSpec()
+    end
+    if event == "PLAYER_SPECIALIZATION_CHANGED" then
+        local unitTarget = ...
+        if UnitIsUnit(unitTarget, "player") then
+            freshTip()
+            currSpec()
+        end
     end
     if event == "ADDON_LOADED" then
         local addOnName = ...
@@ -517,7 +545,61 @@ pFrame:SetScript("OnEvent", function(self, event, ...)
             if not VCH.loadRaidFinish then
                 VCH:LoadRaidFrame()
             end
+            VCH:LoadLootList()
+            self:UnregisterEvent("ADDON_LOADED")
         end
+    end
+    if event == "PLAYER_LOGIN" then
+        currSpec()
+
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tooltip, data)
+            if data and data.id then
+                local isShow = false
+                for k, displayItemID in pairs(VCH.MG_displayItemIDs) do
+                    if displayItemID == data.id then
+                        isShow = true
+                        break
+                    end
+                end
+                for k, displayItemID in pairs(VCH.MR_displayItemIDs) do
+                    if displayItemID == data.id then
+                        isShow = true
+                        break
+                    end
+                end
+                for k, displayItemID in pairs(VCH.UG_displayItemIDs) do
+                    if displayItemID == data.id then
+                        isShow = true
+                        break
+                    end
+                end
+                if isShow then
+                    currSpec()
+                    if specName and specName ~= "" then
+                        tooltip:AddLine(specName)
+                        tooltip:AddTexture(specIcon, { width = 32, height = 32 })
+                    end
+
+
+                    local content = data.lines
+                    local itemString = "^-%s(.*)"
+
+
+                    local currLootData = {}
+
+                    for i, tooltipDataLine in ipairs(content) do
+                        local text = tooltipDataLine.leftText
+                        local item_text = strmatch(text, itemString)
+                        if item_text then
+                            tinsert(currLootData, item_text)
+                        end
+                    end
+                    local Lootcache = D:ReadDB("Lootcache", {})
+                    Lootcache[data.id] = Lootcache[data.id] or {}
+                    Lootcache[data.id][specIcon] = currLootData
+                end
+            end
+        end)
     end
 end)
 
@@ -565,6 +647,12 @@ function VCH:LoadFrame()
                 if displayItemID then
                     InitPoint(displayItemID, 16)
                 end
+
+                -- raid
+                local displayItemID = VCH.MR_displayItemIDs[EncounterJournal.encounterID]
+                if displayItemID then
+                    InitPoint(displayItemID, Difficulty[EJ_GetDifficulty()], true)
+                end
             end)
         end)
         EncounterJournalEncounterFrameInfo:HookScript("OnHide", function()
@@ -590,3 +678,51 @@ end
 -- GameTooltip:HookScript("OnShow", function(self)
 --     print(self:GetOwner().Display.SubTypeIcon:GetAtlas())
 -- end)
+
+function VCH:LoadLootList()
+    local lootEventFrame = CreateFrame("Frame", nil, UIParent)
+    local preTime = GetTime()
+    lootEventFrame:SetScript("OnUpdate", function()
+        if GetTime() - preTime > (1 / 60) then
+            preTime = GetTime()
+            local success, lootFrames = pcall(function()
+                return EncounterJournal.encounter.info.LootContainer.ScrollBox:GetFrames()
+            end)
+            if success then
+                local Lootcache = D:ReadDB("Lootcache", {})
+
+                local displayItemID = VCH.MG_displayItemIDs[EncounterJournal.instanceID] or
+                    VCH.MR_displayItemIDs[EncounterJournal.encounterID]
+                if displayItemID then
+                    Lootcache[displayItemID] = Lootcache[displayItemID] or {}
+                    local lootData = Lootcache[displayItemID][specIcon] or {}
+
+                    for _, lootFrame in ipairs(lootFrames) do
+                        if lootFrame.VCH_ICON then
+                            lootFrame.VCH_ICON:Hide()
+                        end
+                        if lootFrame.itemID then
+                            local itemName = C_Item.GetItemInfo(lootFrame.itemID)
+                            for _, voidCoreLootName in ipairs(lootData) do
+                                if voidCoreLootName == itemName then
+                                    if not lootFrame.VCH_ICON then
+                                        lootFrame.VCH_ICON = lootFrame.VCH_ICON or CreateFrame("Frame", nil, lootFrame)
+                                        lootFrame.VCH_ICON.bg = lootFrame.VCH_ICON.bg or
+                                            lootFrame.VCH_ICON:CreateTexture(nil, "BACKGROUND", nil, 1)
+                                        lootFrame.VCH_ICON.bg:SetAllPoints(lootFrame.VCH_ICON)
+                                        lootFrame.VCH_ICON.bg:SetTexture(7658128)
+                                        lootFrame.VCH_ICON:SetSize(12, 12)
+                                        lootFrame.VCH_ICON:SetPoint("TOPRIGHT", lootFrame, -3, -3)
+                                        lootFrame.VCH_ICON:SetAlpha(0.618)
+                                    end
+                                    lootFrame.VCH_ICON:Show()
+                                    break
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end

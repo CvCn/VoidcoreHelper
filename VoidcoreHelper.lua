@@ -135,18 +135,18 @@ eventFrame:Hide()
 -- eventFrame:RegisterEvent("PLAYER_LOGIN")
 -- eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 local lastTime = GetTime()
-eventFrame:SetScript("OnUpdate", function ()
-    local now = GetTime()
-    if now - lastTime < 1.7 then
-        lastTime = now
-        local item = queue[1]
-        if item then
-            VCH:FreshDungeon(item[1], item[2], function ()
-                queue[1] = nil
-            end)
-        end
-    end
-end)
+-- eventFrame:SetScript("OnUpdate", function ()
+--     local now = GetTime()
+--     if now - lastTime < 1.7 then
+--         lastTime = now
+--         local item = queue[1]
+--         if item then
+--             VCH:FreshDungeon(item[1], item[2], function ()
+--                 queue[1] = nil
+--             end)
+--         end
+--     end
+-- end)
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "SPELL_CONFIRMATION_PROMPT" then
         local spellID, confirmType, text, duration, currencyID, currencyCost, difficultyID, displayItemID, itemContext, treasureContextLevel = ...;
