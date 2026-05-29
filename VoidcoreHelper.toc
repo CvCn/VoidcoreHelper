@@ -1,9 +1,9 @@
 ## Interface: 120005
 ## Title: VoidcoreHelper
 ## Author: York
-## Notes: 晦暗虚空核心助手
+## Notes: 随时查看虚空核心掉落池
 ## SavedVariables: VOIDCOREHELPER_DB
-## Version: 1.1.2
+## Version: 1.1.3
 ## IconTexture: 7658128
 ## X-Curse-Project-ID: 1530072
 
