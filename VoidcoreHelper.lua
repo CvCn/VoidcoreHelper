@@ -169,11 +169,11 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         local scr_data = D:ReadDB("scr_data", {})
         tinsert(scr_data, saveData)
         D:SaveDB("scr_data", scr_data)
-        print("spellID:" .. spellID .. ", confirmType:" .. confirmType ..
-            ", text:" .. text .. ", duration:" .. duration ..
-            ", currencyID:" .. currencyID .. ", currencyCost:" .. currencyCost ..
-            ", difficultyID:" .. difficultyID .. ", displayItemID:" .. displayItemID ..
-            ", itemContext:" .. itemContext .. ", treasureContextLevel:" .. treasureContextLevel)
+        -- print("spellID:" .. spellID .. ", confirmType:" .. confirmType ..
+        --     ", text:" .. text .. ", duration:" .. duration ..
+        --     ", currencyID:" .. currencyID .. ", currencyCost:" .. currencyCost ..
+        --     ", difficultyID:" .. difficultyID .. ", displayItemID:" .. displayItemID ..
+        --     ", itemContext:" .. itemContext .. ", treasureContextLevel:" .. treasureContextLevel)
         D:SaveDB("scr_data", scr_data)
     end
     if event == "PLAYER_LOGIN" then
